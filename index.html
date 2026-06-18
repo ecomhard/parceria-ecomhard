@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ecomhard — A parceira de e-commerce da sua agência</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#070B22; --navy2:#0E1430; --orange:#FF5C28; --orange2:#FF7A45;
+    --cream:#F5F2EC; --ink:#0A0F2C; --muted:#8C93B5; --line:rgba(255,255,255,.10);
+    --green:#37D399; --scale:1;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:#05070F;overflow:hidden;font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased}
+  .display{font-family:'Plus Jakarta Sans',sans-serif}
+
+  /* ---------- STAGE SYSTEM ---------- */
+  #stageWrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  .slide{position:absolute;width:1280px;height:720px;transform:scale(var(--scale));transform-origin:center center;
+    opacity:0;visibility:hidden;transition:opacity .5s ease,transform .5s ease;pointer-events:none}
+  .slide.active{opacity:1;visibility:visible;pointer-events:auto}
+  .stage{position:relative;width:1280px;height:720px;overflow:hidden;border-radius:2px;
+    display:flex;flex-direction:column;justify-content:center;padding:64px 80px;background:var(--navy);color:#fff}
+  .stage.light{background:var(--cream);color:var(--ink)}
+
+  .tag-top{position:absolute;top:34px;left:80px;right:80px;display:flex;align-items:center;gap:18px;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+  .light .tag-top{color:#9a8f7d}
+  .tag-top .lbl{margin-left:auto}
+  .tag-top .rule{flex:1;height:1px;background:var(--line)}
+  .light .tag-top .rule{background:rgba(0,0,0,.12)}
+  .brandmark{display:inline-flex;align-items:center;gap:8px;font-family:'Plus Jakarta Sans';font-weight:800;letter-spacing:-.02em;text-transform:none;font-size:15px;color:#fff}
+  .light .brandmark{color:var(--ink)}
+  .brandmark .dot{width:13px;height:13px;border-radius:50%;background:var(--orange);box-shadow:0 0 16px rgba(255,92,40,.7)}
+
+  h1.display{font-weight:800;line-height:1.04;letter-spacing:-.03em;overflow-wrap:break-word}
+  .eyebrow{color:var(--orange);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:13px;margin-bottom:18px}
+  .lead{color:var(--muted);font-size:18px;line-height:1.55;max-width:48ch}
+  .light .lead{color:#5b5446}
+  .accent{color:var(--orange)}
+  .u{position:relative;display:inline-block}
+  .u:after{content:"";position:absolute;left:0;right:0;bottom:.04em;height:.09em;background:var(--orange);border-radius:3px}
+
+  .glow{position:absolute;border-radius:50%;filter:blur(110px);opacity:.5;pointer-events:none}
+  .glow.o{background:var(--orange);width:420px;height:420px}
+  .glow.b{background:#2540ff;width:460px;height:460px}
+
+  /* COVER */
+  .cover h1{font-size:86px}
+  .cover .sub{margin-top:24px;font-size:21px;color:#cfd3e6;font-weight:500;max-width:34ch;line-height:1.4}
+  .cover .badge{position:absolute;bottom:60px;left:80px;display:inline-flex;gap:10px;align-items:center;
+    background:rgba(255,255,255,.06);border:1px solid var(--line);padding:10px 18px;border-radius:100px;font-size:13.5px;color:#cfd3e6;font-weight:500}
+
+  /* STATS */
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px 40px;margin-top:8px}
+  .stat .n{font-family:'Plus Jakarta Sans';font-weight:800;font-size:54px;line-height:1;letter-spacing:-.03em}
+  .stat .l{margin-top:10px;color:var(--muted);font-size:14px;line-height:1.4;max-width:24ch}
+  .light .stat .l{color:#6b6354}
+
+  .cols{display:grid;grid-template-columns:1.05fr .95fr;gap:70px;align-items:center}
+
+  .pills{display:flex;flex-direction:column;gap:12px;margin-top:22px;max-width:60ch}
+  .pill{background:rgba(255,255,255,.05);border:1px solid var(--line);padding:14px 20px;border-radius:14px;font-size:16px;font-weight:500;color:#dfe2f0}
+  .light .pill{background:#fff;border-color:rgba(0,0,0,.08);color:#3f3a30}
+
+  .cardrow{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:6px}
+  .card{background:var(--navy2);border:1px solid var(--line);border-radius:18px;padding:26px 24px}
+  .light .card{background:#fff;border-color:rgba(0,0,0,.07);box-shadow:0 12px 40px rgba(20,15,5,.05)}
+  .card .num{font-family:'Plus Jakarta Sans';font-weight:800;font-size:26px;color:var(--orange);margin-bottom:14px}
+  .card h3{font-family:'Plus Jakarta Sans';font-weight:700;font-size:18px;margin-bottom:9px}
+  .card p{color:var(--muted);font-size:14.5px;line-height:1.5}
+  .light .card p{color:#6b6354}
+
+  ul.check{list-style:none;margin-top:4px}
+  ul.check li{position:relative;padding-left:32px;margin-bottom:15px;font-size:16.5px;line-height:1.4;color:#dfe2f0}
+  .light ul.check li{color:#3f3a30}
+  ul.check li:before{content:"";position:absolute;left:0;top:1px;width:21px;height:21px;border-radius:50%;background:rgba(255,92,40,.15);border:1px solid var(--orange)}
+  ul.check li:after{content:"";position:absolute;left:6.5px;top:7px;width:8px;height:4px;border-left:2px solid var(--orange);border-bottom:2px solid var(--orange);transform:rotate(-45deg)}
+
+  /* diagram */
+  .diagram{position:relative;height:380px}
+  .node{position:absolute;background:var(--navy2);border:1px solid var(--line);border-radius:14px;padding:14px 22px;
+    font-family:'Plus Jakarta Sans';font-weight:700;font-size:15.5px;text-align:center;z-index:2;min-width:140px;line-height:1.2}
+  .node.hub{background:var(--orange);color:#fff;border-color:var(--orange);box-shadow:0 0 46px rgba(255,92,40,.45);font-size:17px}
+  .node.top{top:0;left:50%;transform:translateX(-50%)}
+  .node.left{left:0;top:50%;transform:translateY(-50%)}
+  .node.right{right:0;top:50%;transform:translateY(-50%)}
+  .node.center{top:50%;left:50%;transform:translate(-50%,-50%)}
+  .node small{display:block;font-family:'Inter';font-weight:400;font-size:11.5px;color:var(--muted);margin-top:4px}
+  .node.hub small{color:rgba(255,255,255,.85)}
+  .cross{position:absolute;inset:0;z-index:1}
+  .cross:before,.cross:after{content:"";position:absolute;background:var(--line)}
+  .cross:before{left:50%;top:10%;bottom:10%;width:1px;transform:translateX(-.5px)}
+  .cross:after{top:50%;left:12%;right:12%;height:1px;transform:translateY(-.5px)}
+
+  /* money */
+  .flowline{display:flex;align-items:center;gap:12px;margin-bottom:24px;font-size:16.5px;color:#dfe2f0;flex-wrap:wrap}
+  .chip{background:rgba(255,255,255,.06);border:1px solid var(--line);padding:8px 16px;border-radius:100px;font-weight:700;font-size:15px;font-family:'Plus Jakarta Sans'}
+  .money{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .money .box{border-radius:18px;padding:30px 28px}
+  .box.dark{background:var(--navy2);border:1px solid var(--line)}
+  .box.hot{background:var(--orange);color:#fff}
+  .box .k{font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;opacity:.75;margin-bottom:12px}
+  .box .v{font-family:'Plus Jakarta Sans';font-weight:800;font-size:50px;letter-spacing:-.03em;line-height:1}
+  .box .vs{font-size:14.5px;margin-top:12px;opacity:.9;line-height:1.45}
+
+  /* pricing */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:4px}
+  .price{background:var(--navy2);border:1px solid var(--line);border-radius:20px;padding:26px 24px;position:relative}
+  .price.feat{border-color:var(--orange);background:linear-gradient(180deg,rgba(255,92,40,.10),var(--navy2))}
+  .price .name{font-family:'Plus Jakarta Sans';font-weight:700;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--orange)}
+  .price .amt{font-family:'Plus Jakarta Sans';font-weight:800;font-size:40px;letter-spacing:-.03em;margin:12px 0 4px}
+  .price .amt small{font-size:15px;font-weight:600;color:var(--muted);letter-spacing:0}
+  .price .desc{color:var(--muted);font-size:14px;line-height:1.5;margin-top:12px}
+  .price .ribbon{position:absolute;top:-11px;right:20px;background:var(--orange);color:#fff;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:100px}
+
+  /* faq */
+  .faq{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:4px}
+  .qa{background:var(--navy2);border:1px solid var(--line);border-radius:16px;padding:24px 26px}
+  .qa q{display:block;font-family:'Plus Jakarta Sans';font-weight:700;font-size:17px;font-style:normal;margin-bottom:10px}
+  .qa p{color:var(--muted);font-size:15px;line-height:1.55}
+
+  /* steps */
+  .steps{display:flex;margin-top:28px}
+  .step{flex:1;position:relative;padding:0 15px}
+  .step:first-child{padding-left:0}
+  .step:not(:last-child):after{content:"";position:absolute;right:0;top:24px;width:1px;height:120px;background:rgba(0,0,0,.12)}
+  .step .sn{width:48px;height:48px;border-radius:50%;border:1px solid var(--orange);color:var(--orange);
+    display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans';font-weight:800;font-size:18px;margin-bottom:16px}
+  .step h4{font-family:'Plus Jakarta Sans';font-weight:700;font-size:16px;margin-bottom:8px}
+  .step p{color:#6b6354;font-size:14px;line-height:1.45}
+
+  .close-cta{display:inline-flex;align-items:center;gap:10px;margin-top:30px;background:var(--orange);color:#fff;
+    font-family:'Plus Jakarta Sans';font-weight:700;font-size:18px;padding:16px 28px;border-radius:100px;text-decoration:none}
+
+  /* partner / authority card */
+  .partner-card{background:#fff;border:1px solid rgba(0,0,0,.07);border-radius:22px;padding:32px;box-shadow:0 16px 48px rgba(20,15,5,.07)}
+  .pc-top{display:flex;align-items:center;gap:14px;font-family:'Plus Jakarta Sans';font-weight:700;font-size:20px;color:var(--ink)}
+  .pc-check{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .pc-check svg{width:32px;height:36px;display:block}
+  .pc-sub{color:#6b6354;font-size:14px;margin-top:10px;padding-left:48px}
+  .pc-div{height:1px;background:rgba(0,0,0,.09);margin:24px 0}
+  .pc-label{font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#9a8f7d;margin-bottom:14px}
+  .flag-row{display:flex;flex-wrap:wrap;gap:10px}
+  .flag{display:inline-flex;align-items:center;gap:8px;background:var(--cream);border:1px solid rgba(0,0,0,.06);padding:9px 15px;border-radius:100px;font-size:14px;font-weight:600;color:#3f3a30}
+  .link-arrow{display:inline-block;margin-top:24px;color:var(--orange);font-weight:700;font-size:15px;text-decoration:none}
+  .link-arrow:hover{text-decoration:underline}
+
+  /* cases grid */
+  .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:4px}
+  .case{background:var(--navy2);border:1px solid var(--line);border-radius:16px;padding:22px;text-decoration:none;display:block;transition:.2s}
+  .case:hover{border-color:rgba(255,92,40,.55);transform:translateY(-2px)}
+  .case-head{display:flex;align-items:center;gap:12px}
+  .case-logo{width:48px;height:48px;border-radius:10px;background:#fff;flex-shrink:0;object-fit:contain;padding:7px;border:1px solid var(--line)}
+  .case-logo.dark{background:#0d0d0d;border-color:#0d0d0d}
+  .case .cn{font-family:'Plus Jakarta Sans';font-weight:700;font-size:19px;color:#fff}
+  .case .cd{color:var(--muted);font-size:13px;margin-top:5px}
+  .case .ct{display:inline-block;margin-top:14px;font-size:11.5px;font-weight:600;letter-spacing:.03em;color:#cfd3e6;background:rgba(255,255,255,.06);border:1px solid var(--line);padding:5px 12px;border-radius:100px}
+  .case.star{border-color:rgba(255,92,40,.45);background:linear-gradient(180deg,rgba(255,92,40,.10),var(--navy2))}
+  .case.star .ct{color:var(--orange);border-color:rgba(255,92,40,.4);background:rgba(255,92,40,.10)}
+
+  /* CHROME */
+  #nav{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:50;display:flex;align-items:center;gap:14px;
+    background:rgba(10,15,40,.7);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:100px;padding:8px 14px}
+  #nav button{background:none;border:none;color:#fff;cursor:pointer;font-size:18px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+  #nav button:hover{background:rgba(255,255,255,.12)}
+  #counter{font-family:'Plus Jakarta Sans';font-weight:700;font-size:13px;color:#cfd3e6;min-width:56px;text-align:center}
+  #bar{position:fixed;top:0;left:0;height:3px;background:var(--orange);z-index:60;transition:width .5s ease;box-shadow:0 0 12px rgba(255,92,40,.7)}
+  .hint{position:fixed;bottom:24px;right:24px;z-index:50;color:#5b6184;font-size:12px}
+
+  @media print{
+    @page{size:1280px 720px;margin:0}
+    html,body{overflow:visible;height:auto;background:#fff}
+    #stageWrap{position:static;display:block}
+    .slide{position:relative;width:1280px;height:720px;transform:none;opacity:1;visibility:visible;page-break-after:always}
+    #nav,#bar,.hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="stageWrap">
+
+  <!-- 1 COVER -->
+  <div class="slide active"><div class="stage cover">
+    <div class="glow o" style="top:-100px;right:-60px"></div>
+    <div class="glow b" style="bottom:-140px;left:-100px"></div>
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Programa de Parcerias</span></div>
+    <div class="eyebrow">A parceira de e-commerce da sua agência</div>
+    <h1 class="display">Você capta.<br><span class="accent">Nós desenvolvemos.</span></h1>
+    <p class="sub">O braço de implantação Shopify da sua agência. Em white label e com toda a gestão por nossa conta — sem expandir equipe e sem dor de cabeça operacional.</p>
+    <div class="badge"><span style="width:9px;height:9px;border-radius:50%;background:var(--green);display:inline-block"></span> Shopify Service Partner oficial · desde 2022</div>
+  </div></div>
+
+  <!-- 2 QUEM SOMOS / AUTORIDADE -->
+  <div class="slide"><div class="stage light">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Quem somos</span><span class="rule"></span></div>
+    <div class="cols">
+      <div>
+        <div class="eyebrow">Quem somos</div>
+        <h1 class="display" style="font-size:42px;line-height:1.08">Parceiro <span class="accent">oficial Shopify</span> — com entrega em 5 países.</h1>
+        <p class="lead" style="margin-top:22px">Listados e verificados no Shopify Partners Directory pela própria Shopify. Não é promessa: é selo oficial e portfólio internacional.</p>
+        <a class="link-arrow" href="https://www.shopify.com/partners/directory/partner/devora-ecom" target="_blank">Ver no Shopify Partners Directory →</a>
+      </div>
+      <div>
+        <div class="partner-card">
+          <div class="pc-top"><span class="pc-check"><svg viewBox="0 0 448 512" aria-hidden="true"><path fill="#95BF47" d="M388.32 104.1c-.3-2.2-2.2-3.4-3.8-3.5-1.6-.1-33.3-2.5-33.3-2.5s-22.1-21.9-24.5-24.4c-2.4-2.4-7.2-1.7-9-1.2-.3.1-4.4 1.4-11.7 3.6-7.2-20.7-19.9-39.7-42.2-39.7h-2c-6.3-8.3-14.2-12-21-12-51.7.2-76.4 64.8-84.1 97.6-20.1 6.2-34.4 10.6-36.2 11.2-11.2 3.5-11.5 3.9-13 14.4C71.1 159 41.5 388.6 41.5 388.6L273.6 432l125.7-27.2s-10.7-298.5-11-300.7zM280.6 76.5c-5.8 1.8-12.4 3.8-19.5 6v-4.2c0-12.7-1.8-22.9-4.6-31 11.2 1.5 18.7 14.2 24.1 29.2zm-38.5-26.7c3.2 7.9 5.2 19.2 5.2 34.5v2.2c-12.7 3.9-26.5 8.2-40.4 12.5 7.8-30 22.4-44.5 35.2-49.2zm-15.5-14.7c2.3 0 4.6.8 6.8 2.3-16.8 7.9-34.8 27.8-42.4 67.6-11.1 3.4-22 6.8-32 9.9C166.1 87 187 35.1 226.6 35.1z"/><path fill="#5E8E3E" d="M384.5 100.6c-1.6-.1-33.3-2.5-33.3-2.5s-22.1-21.9-24.5-24.4c-.9-.9-2.1-1.4-3.4-1.6L273.7 432l125.7-27.2s-10.7-298.5-11-300.7c-.3-2.2-2.2-3.4-3.9-3.5z"/><path fill="#FFF" d="M248 171.6l-15.5 46.1s-13.7-7.3-30.4-7.3c-24.6 0-25.8 15.4-25.8 19.3 0 21.1 55.1 29.2 55.1 78.7 0 39-24.7 64-58 64-40 0-60.4-24.9-60.4-24.9l10.7-35.4s21 18 38.7 18c11.6 0 16.3-9.1 16.3-15.8 0-27.5-45.2-28.7-45.2-74 0-38.2 27.4-75.2 82.7-75.2 21.3 0 31.8 6.1 31.8 6.1z"/></svg></span> Shopify Service Partner</div>
+          <div class="pc-sub">Parceiro oficial verificado · desde 2022</div>
+          <div class="pc-div"></div>
+          <div class="pc-label">Projetos entregues em</div>
+          <div class="flag-row">
+            <span class="flag">🇧🇷 Brasil</span>
+            <span class="flag">🇳🇿 Nova Zelândia</span>
+            <span class="flag">🇨🇦 Canadá</span>
+            <span class="flag">🇵🇹 Portugal</span>
+            <span class="flag">🇩🇪 Alemanha</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 3 CASES -->
+  <div class="slide"><div class="stage">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Cases</span><span class="rule"></span></div>
+    <div class="eyebrow">Cases</div>
+    <h1 class="display" style="font-size:40px;max-width:26ch;margin-bottom:8px">Marcas que já <span class="accent">confiaram na nossa entrega</span>.</h1>
+    <p class="lead" style="margin-bottom:22px">Quase todas entregues em <strong style="color:#fff">white label</strong>, para agências que terceirizaram conosco — o modelo exato desta proposta.</p>
+    <div class="case-grid">
+      <a class="case" href="https://store.loovi.com.br/" target="_blank"><div class="case-head"><img class="case-logo" src="https://www.google.com/s2/favicons?sz=128&domain=loovi.com.br" alt="" onerror="this.style.display='none'"><div><div class="cn">Loovi</div><div class="cd">store.loovi.com.br</div></div></div><span class="ct">🇧🇷 Brasil · via agência parceira</span></a>
+      <a class="case" href="https://thewildfermentary.co.nz/" target="_blank"><div class="case-head"><img class="case-logo" src="data:image/png;base64,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" alt=""><div><div class="cn">The Wild Fermentary</div><div class="cd">thewildfermentary.co.nz</div></div></div><span class="ct">🇳🇿 Nova Zelândia · via agência</span></a>
+      <a class="case" href="https://curiousbuynature.com/" target="_blank"><div class="case-head"><img class="case-logo" src="https://www.google.com/s2/favicons?sz=128&domain=curiousbuynature.com" alt="" onerror="this.style.display='none'"><div><div class="cn">Curious by Nature</div><div class="cd">curiousbuynature.com</div></div></div><span class="ct">Internacional · via agência</span></a>
+      <a class="case star" href="https://somd-r.com/" target="_blank"><div class="case-head"><img class="case-logo dark" src="data:image/png;base64,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" alt=""><div><div class="cn">SOMD-R</div><div class="cd">somd-r.com</div></div></div><span class="ct">🇧🇷 MC Hariel · projeto direto</span></a>
+      <a class="case" href="https://gingastudios.com/" target="_blank"><div class="case-head"><img class="case-logo" src="https://www.google.com/s2/favicons?sz=128&domain=gingastudios.com" alt="" onerror="this.style.display='none'"><div><div class="cn">Ginga Studios</div><div class="cd">gingastudios.com</div></div></div><span class="ct">via agência parceira</span></a>
+      <a class="case" href="https://marepescados.com/" target="_blank"><div class="case-head"><img class="case-logo" src="https://www.google.com/s2/favicons?sz=128&domain=marepescados.com" alt="" onerror="this.style.display='none'"><div><div class="cn">Maré Pescados</div><div class="cd">marepescados.com</div></div></div><span class="ct">🇧🇷 Brasil · via agência</span></a>
+    </div>
+  </div></div>
+
+  <!-- 4 NÚMEROS -->
+  <div class="slide"><div class="stage light">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Números</span><span class="rule"></span></div>
+    <div class="eyebrow">Não somos promessa. Somos histórico.</div>
+    <h1 class="display" style="font-size:46px;max-width:20ch;margin-bottom:48px">Um time especialista em lojas que <span class="accent">vendem</span> — não só bonitas.</h1>
+    <div class="stat-grid" style="display:flex;justify-content:space-between;align-items:flex-start;max-width:1020px;gap:0">
+      <div class="stat" style="flex:1;text-align:center;padding:0 24px"><div class="n" style="font-size:66px">130<span class="accent">+</span></div><div class="l" style="margin:12px auto 0;max-width:18ch">lojas implementadas</div></div>
+      <div class="stat" style="flex:1;text-align:center;padding:0 24px;border-left:1px solid rgba(0,0,0,.10)"><div class="n" style="font-size:66px">R$100<span class="accent">M+</span></div><div class="l" style="margin:12px auto 0;max-width:18ch">em vendas geradas pelas lojas</div></div>
+      <div class="stat" style="flex:1;text-align:center;padding:0 24px;border-left:1px solid rgba(0,0,0,.10)"><div class="n" style="font-size:66px">5,0<span class="accent">★</span></div><div class="l" style="margin:12px auto 0;max-width:18ch">avaliação no Shopify Partners Directory</div></div>
+    </div>
+  </div></div>
+
+  <!-- 3 PROBLEMA -->
+  <div class="slide"><div class="stage">
+    <div class="glow o" style="bottom:-160px;right:-100px;opacity:.32"></div>
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">O problema</span><span class="rule"></span></div>
+    <div class="eyebrow">A dor de toda agência de performance</div>
+    <h1 class="display" style="font-size:64px;max-width:17ch">Seu cliente precisa de loja. E você <span class="u">não desenvolve</span>.</h1>
+    <p class="lead" style="margin-top:24px">Aí acontece uma de três coisas — todas ruins:</p>
+    <div class="pills">
+      <span class="pill">① O cliente busca dev <span class="accent">fora</span> — e você não ganha nada com isso.</span>
+      <span class="pill">② Você terceiriza no improviso — <span class="accent">sem conhecer a entrega</span>.</span>
+      <span class="pill">③ Com equipe de improviso, <span class="accent">não há relacionamento nenhum</span> — e você fica inseguro do início ao fim.</span>
+    </div>
+    <p class="lead" style="margin-top:22px;color:#fff;font-weight:500">Com a ecomhard é o oposto: relação direta e contínua — você se sente <span class="accent">seguro e confiante</span> em cada entrega.</p>
+  </div></div>
+
+  <!-- 6 NOSSO DIFERENCIAL -->
+  <div class="slide"><div class="stage light">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Nosso diferencial</span><span class="rule"></span></div>
+    <div class="cols">
+      <div>
+        <div class="eyebrow">Nosso diferencial</div>
+        <h1 class="display" style="font-size:42px;line-height:1.1">Loja bonita é o meio. <span class="accent">Otimizar a conversão é o objetivo.</span></h1>
+        <p class="lead" style="margin-top:22px">Nosso maior diferencial é entender <strong style="color:var(--ink)">performance de e-commerce</strong>. Cada loja é construída para converter — apoiada em quatro pilares.</p>
+      </div>
+      <div>
+        <ul class="check">
+          <li><strong style="color:var(--ink)">UX</strong> — experiência que conduz o cliente até a compra</li>
+          <li><strong style="color:var(--ink)">CRO</strong> — otimização contínua da taxa de conversão</li>
+          <li><strong style="color:var(--ink)">Análise de concorrentes diretos</strong> — o que já converte no seu mercado</li>
+          <li><strong style="color:var(--ink)">Referências dos EUA</strong> — benchmark de quem está à frente</li>
+        </ul>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 6.5 METODOLOGIA -->
+  <div class="slide"><div class="stage light">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Metodologia</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:46px;margin-bottom:8px">Nosso processo, do start à entrega</h1>
+    <p class="lead" style="margin-bottom:6px">Método completo: por isso a loja não fica só bonita — ela vende.</p>
+    <div class="steps">
+      <div class="step"><div class="sn">1</div><h4>Call de start</h4><p>A call de start fazemos diretamente com o cliente da sua agência.</p></div>
+      <div class="step"><div class="sn">2</div><h4>Análise de CRO</h4><p>Mapeamos gargalos de conversão antes de tudo.</p></div>
+      <div class="step"><div class="sn">3</div><h4>Pesquisa</h4><p>Benchmark de concorrentes nacionais e internacionais.</p></div>
+      <div class="step"><div class="sn">4</div><h4>Escopo estratégico</h4><p>Definimos o que importa para o resultado final.</p></div>
+      <div class="step"><div class="sn">5</div><h4>Desenvolvimento</h4><p>Construção alinhada ao objetivo: converter.</p></div>
+      <div class="step"><div class="sn">6</div><h4>Apresentação do projeto</h4><p>Apresentamos a loja pronta ao cliente da sua agência.</p></div>
+    </div>
+  </div></div>
+
+  <!-- 5 MODELO -->
+  <div class="slide"><div class="stage">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Nosso modelo</span><span class="rule"></span></div>
+    <div class="cols">
+      <div>
+        <div class="eyebrow">Simples e sem risco</div>
+        <h1 class="display" style="font-size:42px;line-height:1.1">Aumenta seu faturamento <span class="accent">sem aumentar R$1</span> de custo operacional.</h1>
+        <p class="lead" style="margin-top:22px">Você é dono da relação comercial. Nós somos o time invisível que executa por trás.</p>
+      </div>
+      <div class="diagram">
+        <div class="cross"></div>
+        <div class="node top">Sua agência<small>vende e fatura</small></div>
+        <div class="node left">Seu cliente<small>contrata você</small></div>
+        <div class="node right">Loja que<br>converte<small>resultado final</small></div>
+        <div class="node hub center">ecomhard<small>executa em white label</small></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 6 A SACADA -->
+  <div class="slide"><div class="stage">
+    <div class="glow b" style="top:-120px;left:-80px;opacity:.4"></div>
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">A sacada</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:68px;line-height:1.02">Você tem o cliente.<br><span style="color:#cfd3e6">Nós temos a solução.</span></h1>
+    <h1 class="display" style="font-size:46px;margin-top:30px"><span class="u">Você capta. Nós entregamos.</span></h1>
+    <p class="lead" style="margin-top:26px">E o melhor: o seu cliente nunca vê a ecomhard. Para ele, é tudo time da sua agência.</p>
+  </div></div>
+
+  <!-- 8 COMO FUNCIONA -->
+  <div class="slide"><div class="stage">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Como funciona</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:50px;margin-bottom:40px">Como funciona na prática</h1>
+    <div class="cardrow">
+      <div class="card"><div class="num">01</div><h3>Preço tabelado e fixo</h3><p>Nosso custo por projeto é fixo e confidencial. Você sabe exatamente quanto paga, sempre.</p></div>
+      <div class="card"><div class="num">02</div><h3>Você vende com sua margem</h3><p>Sua agência prospecta, fecha e adiciona a margem que quiser por cima do nosso valor.</p></div>
+      <div class="card"><div class="num">03</div><h3>Nós executamos</h3><p>Você repassa o projeto e nós desenvolvemos. Acompanhe tudo via grupo de WhatsApp e Monday.</p></div>
+    </div>
+  </div></div>
+
+  <!-- 9 WHITE LABEL -->
+  <div class="slide"><div class="stage light">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">White label de verdade</span><span class="rule"></span></div>
+    <div class="cols">
+      <div>
+        <div class="eyebrow">Sua marca, nosso trabalho</div>
+        <h1 class="display" style="font-size:42px;line-height:1.1">Atendemos como <span class="accent">time interno</span> da sua agência.</h1>
+        <p class="lead" style="margin-top:22px">O cliente fala com a "sua equipe". Nunca aparecemos como ecomhard. A relação é, e continua sendo, da sua agência.</p>
+      </div>
+      <div>
+        <ul class="check">
+          <li>Propostas e entregáveis sem nenhuma marca ecomhard</li>
+          <li>Comunicação com o cliente em nome do seu time</li>
+          <li>Sigilo total em contrato — você nunca fica exposto</li>
+        </ul>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- 10 PREÇOS -->
+  <div class="slide"><div class="stage">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Planos</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:46px;margin-bottom:6px">Escopos e preços <span class="accent">tabelados</span></h1>
+    <p class="lead" style="margin-bottom:26px">Valores de parceiro (confidenciais). Você adiciona sua margem à vontade.</p>
+    <div class="price-grid">
+      <div class="price feat"><div class="ribbon">mais vendido</div><div class="name">Criação do zero · Shopify</div><div class="amt">R$5.000<small>/projeto</small></div><div class="desc">Setup completo, categorias, cadastro via integração, tema focado em conversão, apps essenciais, checkout, mobile-first. 30 dias úteis.</div></div>
+      <div class="price"><div class="name">Reformulação · Shopify</div><div class="amt">R$4.000<small>/projeto</small></div><div class="desc">Auditoria de Core Web Vitals, redesign de UI por dados de UX, CRO, refatoração de scripts e checkout otimizado.</div></div>
+      <div class="price"><div class="name">Nuvemshop</div><div class="amt">R$2.000<small>/projeto</small></div><div class="desc">Implantação completa na Nuvemshop, ideal para operações em fase inicial.</div></div>
+    </div>
+    <p class="lead" style="margin-top:22px;font-size:14px">Temas Shopify não inclusos — comprados à parte. <span style="opacity:.6">(valores ajustáveis)</span></p>
+  </div></div>
+
+  <!-- 11 EXEMPLO -->
+  <div class="slide"><div class="stage">
+    <div class="glow o" style="top:-100px;left:-80px;opacity:.32"></div>
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Exemplo prático</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:46px;margin-bottom:26px">A conta que fecha pro seu bolso</h1>
+    <div class="flowline">
+      <span>Sua agência fecha um projeto Shopify por</span><span class="chip">R$15.000</span>
+      <span>· nosso valor tabelado é</span><span class="chip">R$5.000</span>
+    </div>
+    <div class="money">
+      <div class="box dark"><div class="k">Parte da ecomhard</div><div class="v">R$5.000</div><div class="vs">Execução completa, white label, em 30 dias úteis.</div></div>
+      <div class="box hot"><div class="k">Seu lucro</div><div class="v">R$10.000</div><div class="vs">Você fica com o dobro do fornecedor — sem tocar em uma linha de código.</div></div>
+    </div>
+  </div></div>
+
+  <!-- 12 RECORRÊNCIA -->
+  <div class="slide"><div class="stage light">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Recorrência</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:46px;margin-bottom:4px">Planos de manutenção mensal</h1>
+    <p class="lead" style="margin-bottom:26px">Aumente o ticket e crie receita recorrente — também com a sua margem por cima.</p>
+    <div class="price-grid">
+      <div class="price" style="background:#fff;border-color:rgba(0,0,0,.07)"><div class="name">Essencial</div><div class="amt" style="color:var(--ink)">R$490<small>/mês</small></div><div class="desc" style="color:#6b6354">Ajustes pontuais (banner, texto, bug leve), suporte técnico, atualização de preços e promoções. 1 cliente.</div></div>
+      <div class="price feat" style="background:linear-gradient(180deg,rgba(255,92,40,.08),#fff)"><div class="ribbon">recomendado</div><div class="name">Squad</div><div class="amt" style="color:var(--ink)">R$1.290<small>/mês</small></div><div class="desc" style="color:#6b6354">Tudo do Essencial + revisões estruturais, novas seções, integração de apps e otimização contínua de conversão.</div></div>
+      <div class="price" style="background:#fff;border-color:rgba(0,0,0,.07)"><div class="name">Full</div><div class="amt" style="color:var(--ink)">R$2.990<small>/mês</small></div><div class="desc" style="color:#6b6354">Tudo do Squad + landing pages, testes A/B, kits de criativos e revisão mensal completa da loja.</div></div>
+    </div>
+    <p class="lead" style="margin-top:20px;font-size:14px;opacity:.7">Valores de referência — ajustáveis por volume de clientes.</p>
+  </div></div>
+
+  <!-- 13 VANTAGENS -->
+  <div class="slide"><div class="stage">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Vantagens</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:60px;margin-bottom:38px">É lucro e escala<br><span class="accent">sem dor de cabeça.</span></h1>
+    <div class="cardrow">
+      <div class="card"><h3>Zero custo fixo</h3><p>Nenhuma contratação, nenhuma estrutura nova. Você só paga quando vende.</p></div>
+      <div class="card"><h3>Escala absorvida</h3><p>Vários projetos simultâneos rodando ao mesmo tempo, sem travar a sua operação.</p></div>
+      <div class="card"><h3>Sua marca protegida</h3><p>Entrega de quem fez 130+ lojas e R$100M+ em vendas. Sua reputação em mãos seguras.</p></div>
+    </div>
+  </div></div>
+
+  <!-- 14 DÚVIDAS -->
+  <div class="slide"><div class="stage">
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Dúvidas</span><span class="rule"></span></div>
+    <h1 class="display" style="font-size:46px;margin-bottom:28px">Algumas dúvidas que você deve ter</h1>
+    <div class="faq">
+      <div class="qa"><q>Quem gerencia o cliente?</q><p><span class="accent">Nós.</span> Conduzimos a operação como seu time interno. Se preferir, sua equipe pode intermediar — você escolhe.</p></div>
+      <div class="qa"><q>Minha agência paga algo?</q><p><span class="accent">Não.</span> A parceria não tem custo. Assinamos só um contrato definindo a relação, sigilo e SLA.</p></div>
+      <div class="qa"><q>Os preços são mesmo fixos?</q><p><span class="accent">Sim.</span> Os únicos extras são tema (Shopify) e, em casos específicos, cadastro manual de produtos.</p></div>
+      <div class="qa"><q>O cliente descobre a ecomhard?</q><p><span class="accent">Nunca.</span> Operamos no seu domínio, com seus templates. Para o cliente, somos o seu time.</p></div>
+    </div>
+  </div></div>
+
+  <!-- 16 FECHAMENTO -->
+  <div class="slide"><div class="stage cover">
+    <div class="glow o" style="bottom:-120px;right:-80px"></div>
+    <div class="glow b" style="top:-140px;left:-120px;opacity:.4"></div>
+    <div class="tag-top"><span class="brandmark"><span class="dot"></span>ecomhard</span><span class="lbl">Vamos começar</span></div>
+    <div class="eyebrow">A parceira especialista em e-commerce da sua agência</div>
+    <h1 class="display" style="font-size:76px">Você vende.<br>Nós fazemos<br><span class="accent">a loja vender.</span></h1>
+    <a class="close-cta" href="mailto:contato@ecomhard.com">contato@ecomhard.com →</a>
+  </div></div>
+
+</div>
+
+<div id="nav">
+  <button id="prev" aria-label="Anterior">‹</button>
+  <span id="counter">01 / 16</span>
+  <button id="next" aria-label="Próximo">›</button>
+</div>
+<div class="hint">← → navegar · F tela cheia · Ctrl+P exportar PDF</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let i=0;
+  const counter=document.getElementById('counter');
+  const bar=document.getElementById('bar');
+  const pad=n=>String(n).padStart(2,'0');
+  function go(n){
+    i=Math.max(0,Math.min(total-1,n));
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+    counter.textContent=`${pad(i+1)} / ${pad(total)}`;
+    bar.style.width=`${((i+1)/total)*100}%`;
+  }
+  function fit(){
+    const s=Math.min(window.innerWidth/1280, window.innerHeight/720)*0.94;
+    document.documentElement.style.setProperty('--scale',s);
+  }
+  document.getElementById('next').onclick=()=>go(i+1);
+  document.getElementById('prev').onclick=()=>go(i-1);
+  document.addEventListener('keydown',e=>{
+    if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();go(i+1)}
+    if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(i-1)}
+    if(e.key==='Home')go(0);
+    if(e.key==='End')go(total-1);
+    if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()}
+  });
+  let x0=null;
+  addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+  addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(i+(dx<0?1:-1));x0=null});
+  addEventListener('resize',fit);
+  fit();go(0);
+</script>
+</body>
+</html>
