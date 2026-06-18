@@ -171,6 +171,56 @@
   #bar{position:fixed;top:0;left:0;height:3px;background:var(--orange);z-index:60;transition:width .5s ease;box-shadow:0 0 12px rgba(255,92,40,.7)}
   .hint{position:fixed;bottom:24px;right:24px;z-index:50;color:#5b6184;font-size:12px}
 
+  /* ---------- MOBILE (retrato) — slide vira tela cheia e conteúdo empilha ---------- */
+  @media (max-width:768px){
+    #stageWrap{display:block}
+    .slide{width:100vw;height:100vh;transform:none!important}
+    .stage{width:100vw;height:100vh;border-radius:0;padding:68px 22px 84px;
+      justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .tag-top{top:22px;left:22px;right:22px;font-size:10px;letter-spacing:.14em}
+    .brandmark{font-size:13px}
+
+    h1.display{font-size:30px!important;line-height:1.12!important;margin-bottom:14px!important}
+    .cover h1{font-size:40px!important}
+    .eyebrow{font-size:12px;margin-bottom:14px}
+    .lead,.cover .sub{font-size:16px!important;max-width:none!important;line-height:1.5!important}
+
+    /* empilha todas as grades */
+    .cols{grid-template-columns:1fr!important;gap:22px!important}
+    .cardrow,.price-grid,.case-grid,.faq,.money{grid-template-columns:1fr!important;gap:14px!important}
+    .card{padding:20px}
+    .price{padding:22px}
+
+    /* números */
+    .stat-grid{display:grid!important;grid-template-columns:1fr!important;gap:18px!important;max-width:none!important}
+    .stat-grid .stat{flex:none!important;border-left:none!important;padding:0!important;text-align:left!important}
+    .stat .n{font-size:44px!important}
+    .stat-grid .stat .l{margin:6px 0 0!important;max-width:none!important}
+
+    /* metodologia em lista vertical */
+    .steps{flex-direction:column;gap:16px;margin-top:20px}
+    .step{padding:0!important}
+    .step:not(:last-child):after{display:none}
+    .step .sn{width:42px;height:42px;font-size:16px;margin-bottom:10px}
+
+    /* diagrama do modelo empilhado */
+    .diagram{height:auto;display:flex;flex-direction:column;gap:12px;margin-top:8px}
+    .cross{display:none}
+    .node{position:static!important;transform:none!important;min-width:0;width:100%}
+
+    /* capa: badge passa a fluir no final */
+    .cover .badge{position:static;left:auto;bottom:auto;margin-top:22px}
+    .close-cta{margin-top:24px}
+
+    /* exemplo / dinheiro */
+    .box .v{font-size:40px!important}
+    .flowline{font-size:15px;gap:10px}
+
+    .pills{gap:10px}
+    .hint{display:none}
+    #nav{bottom:16px}
+  }
+
   @media print{
     @page{size:1280px 720px;margin:0}
     html,body{overflow:visible;height:auto;background:#fff}
@@ -455,9 +505,14 @@
     if(e.key==='End')go(total-1);
     if(e.key==='f'||e.key==='F'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen()}
   });
-  let x0=null;
-  addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
-  addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>50)go(i+(dx<0?1:-1));x0=null});
+  let x0=null,y0=null;
+  addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  addEventListener('touchend',e=>{
+    if(x0===null)return;
+    const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)) go(i+(dx<0?1:-1));
+    x0=null;y0=null;
+  });
   addEventListener('resize',fit);
   fit();go(0);
 </script>
